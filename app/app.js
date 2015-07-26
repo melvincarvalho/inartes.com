@@ -121,6 +121,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym($scope.contentURI) );
     if ($scope.verses.length > $scope.verse) {
       $scope.artes = $scope.verses[$scope.verse].object.value;
+      $location.search('contentURI', $scope.verses[$scope.verse].subject.value);
     }
     console.log($scope.artes);
     $scope.$apply();
@@ -152,7 +153,14 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     var contentURI = 'https://inartes.databox.me/Public/dante/inferno-01';
     if ($location.search().contentURI) {
-      contentURI = $location.search().contentURI;
+      contentURI = $location.search().contentURI.split('#')[0];
+      if ($location.search().contentURI.split('#').length > 0) {
+        var line = $location.search().contentURI.split('#')[1];
+        if (parseInt(line)) {
+          $scope.line = parseInt(line);
+          $scope.verse = (parseInt(line)-1)/3;
+        }
+      }
     }
     $scope.contentURI = contentURI;
 
