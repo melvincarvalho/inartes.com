@@ -157,6 +157,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       if ($location.search().contentURI.split('#').length > 0) {
         var line = $location.search().contentURI.split('#')[1];
         if (parseInt(line)) {
+          $scope.chapter = parseInt(contentURI.substr(-2));
           $scope.line = parseInt(line);
           $scope.verse = (parseInt(line)-1)/3;
         }
