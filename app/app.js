@@ -100,11 +100,25 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       $scope.render();
     } else {
       console.log('load next chapter');
+      $scope.chapter = parseInt($scope.contentURI.substr(-2));
+      $scope.chapter += 1;
+      var stem = $scope.contentURI.substr(0, $scope.contentURI.length - 2);
+
+      if ($scope.chapter < 10) {
+        stem += '0';
+      }
+      $scope.contentURI = stem + $scope.chapter;
+
+      $scope.verse = 0;
+      $scope.line = 1;
+      f.nowOrWhenFetched($scope.contentURI, undefined, function(ok, body) {
+        $scope.render();
+      });
     }
   };
 
   $scope.render = function() {
-    $scope.verses = g.statementsMatching(undefined, BIBO('content'));
+    $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym($scope.contentURI) );
     if ($scope.verses.length > $scope.verse) {
       $scope.artes = $scope.verses[$scope.verse].object.value;
     }
@@ -136,13 +150,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.loginTLSButtonText = "Login";
     // display elements object
 
-    var storageURI = 'https://inartes.databox.me/Public/dante/inferno-01';
-    if ($location.search().storageURI) {
-      storageURI = $location.search().storageURI;
+    var contentURI = 'https://inartes.databox.me/Public/dante/inferno-01';
+    if ($location.search().contentURI) {
+      contentURI = $location.search().contentURI;
     }
-    $scope.storageURI = storageURI;
+    $scope.contentURI = contentURI;
 
-    f.nowOrWhenFetched(storageURI, undefined, function(ok, body) {
+    f.nowOrWhenFetched(contentURI, undefined, function(ok, body) {
       $scope.render();
     });
 
