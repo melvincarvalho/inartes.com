@@ -9,6 +9,7 @@ var DCT   = $rdf.Namespace("http://purl.org/dc/terms/");
 var FACE  = $rdf.Namespace("https://graph.facebook.com/schema/~/");
 var FOAF  = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
 var LIKE  = $rdf.Namespace("http://ontologi.es/like#");
+var LINK  = $rdf.Namespace("http://www.w3.org/2007/ont/link#");
 var LDP   = $rdf.Namespace("http://www.w3.org/ns/ldp#");
 var MBLOG = $rdf.Namespace("http://www.w3.org/ns/mblog#");
 var OWL   = $rdf.Namespace("http://www.w3.org/2002/07/owl#");
@@ -93,6 +94,19 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     LxNotificationService.success('Logout Successful!');
   };
 
+  $scope.getNextChapter = function() {
+    var chapter = parseInt($scope.contentURI.substr(-2));
+    chapter += 1;
+    var stem = $scope.contentURI.substr(0, $scope.contentURI.length - 2);
+
+    if ($scope.chapter < 10) {
+      stem += '0';
+    }
+
+    return stem + chapter;
+
+  };
+
   $scope.next = function() {
     if ($scope.verse < $scope.verses.length-1) {
       $scope.verse++;
@@ -100,20 +114,26 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       $scope.render();
     } else {
       console.log('load next chapter');
-      $scope.chapter = parseInt($scope.contentURI.substr(-2));
-      $scope.chapter += 1;
-      var stem = $scope.contentURI.substr(0, $scope.contentURI.length - 2);
+      var next = $scope.getNextChapter();
 
-      if ($scope.chapter < 10) {
-        stem += '0';
-      }
-      $scope.contentURI = stem + $scope.chapter;
 
-      $scope.verse = 0;
-      $scope.line = 1;
-      f.nowOrWhenFetched($scope.contentURI, undefined, function(ok, body) {
+      f.nowOrWhenFetched(next, undefined, function(ok, body) {
+        var error = g.statementsMatching($rdf.sym(next), LINK('error'));
+
+        if (error.length>0) {
+          alert('HTTP 402, payment required!  First two chapters are free.  This is a demo :)');
+          return;
+        }
+
+        $scope.verse = 0;
+        $scope.line = 1;
+        $scope.chapter++;
+        $scope.contentURI = next;
+
         $scope.render();
       });
+
+
     }
   };
 
