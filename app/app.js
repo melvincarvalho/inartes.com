@@ -48,6 +48,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   $scope.TLSlogin = function() {
     $scope.loginTLSButtonText = 'Logging in...';
+    console.log('logging in');
     $http({
       method: 'HEAD',
       url: AUTHENDPOINT,
@@ -56,11 +57,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       // add dir to local list
       var user = headers('User');
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
-        LxNotificationService.success('Login Successful!');
+        //LxNotificationService.success('Login Successful!');
         $scope.loggedIn = true;
         $scope.user = user;
+        console.log('success logged in a ' + user);
       } else {
-        LxNotificationService.error('WebID-TLS authentication failed.');
+        //LxNotificationService.error('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');
       }
       $scope.loginTLSButtonText = 'Login';
@@ -121,7 +123,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
         var error = g.statementsMatching($rdf.sym(next), LINK('error'));
 
         if (error.length>0) {
-          alert('HTTP 402, payment required!  First two chapters are free.  This is a demo :)');
+          // process 402 or 403
+          var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nNext chapter costs 1 bit.\nWould you like to buy access?');
+          if (c) {
+            $scope.TLSlogin();
+            setTimeout(pay, 1000);
+          }
           return;
         }
 
@@ -136,6 +143,33 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     }
   };
+
+  function pay() {
+    if (!$scope.user) alert('Please log in first.')
+    alert('paying ' + $scope.user);
+
+
+    var bot = 'https://inartes.databox.me/profile/card#me';
+
+    var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
+    wc += '  <https://w3id.org/cc#source> \n    <' + $scope.user + '> ;\n';
+    wc += '  <https://w3id.org/cc#destination> \n    <' + bot + '> ;\n';
+    wc += '  <https://w3id.org/cc#amount> "' + 1 + '" ;\n';
+    wc += '  <https://w3id.org/cc#currency> \n    <https://w3id.org/cc#bit> .\n';
+
+
+    var hash = CryptoJS.SHA256($scope.user).toString();
+
+    function postFile(file, data) {
+      xhr = new XMLHttpRequest();
+      xhr.open('POST', file, false);
+      xhr.setRequestHeader('Content-Type', 'text/turtle; charset=UTF-8');
+      xhr.send(data);
+    }
+
+    postFile('https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/', wc);
+    console.log(wc);
+  }
 
   $scope.render = function() {
     $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym($scope.contentURI) );
