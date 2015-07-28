@@ -31,7 +31,8 @@ var gg;
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
 var App = angular.module('myApp', [
-  'lumx'
+  'lumx',
+  'ngAudio'
 ]);
 
 App.config(function($locationProvider) {
@@ -39,7 +40,7 @@ App.config(function($locationProvider) {
     .html5Mode({ enabled: true, requireBase: false });
 });
 
-App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNotificationService, LxProgressService, LxDialogService) {
+App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNotificationService, LxProgressService, LxDialogService, ngAudio) {
 
   // save app configuration if it's the first time the app runs
   $scope.initApp = function() {
@@ -145,7 +146,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   function pay() {
-    if (!$scope.user) alert('Please log in first.')
+    if (!$scope.user) alert('Please log in first.');
     alert('paying ' + $scope.user);
 
 
@@ -188,6 +189,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.artes = 'loading...';
     $scope.chapter = 1;
     $scope.line = 1;
+
+    $scope.defaultSound = 'audio/button-3.mp3';
+    $scope.audio = ngAudio.load($scope.defaultSound);
+
 
     // start in memory DB
     g = $rdf.graph();
