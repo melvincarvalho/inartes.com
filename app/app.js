@@ -19,6 +19,8 @@ var RDFS  = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
 var SIOC  = $rdf.Namespace("http://rdfs.org/sioc/ns#");
 var SOLID = $rdf.Namespace("http://www.w3.org/ns/solid/app#");
 var URN   = $rdf.Namespace("urn:");
+var XHV   = $rdf.Namespace("http://www.w3.org/1999/xhtml/vocab#");
+
 
 var AUTHENDPOINT = "https://databox.me/";
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
@@ -98,6 +100,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   $scope.getNextChapter = function() {
+    var n = g.statementsMatching($rdf.sym($scope.contentURI), XHV('next'));
+    if (n.length > 0) {
+      return n[0].object.value;
+    }
+
+
     var chapter = parseInt($scope.contentURI.substr(-2));
     chapter += 1;
     var stem = $scope.contentURI.substr(0, $scope.contentURI.length - 2);
