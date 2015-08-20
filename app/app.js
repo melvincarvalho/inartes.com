@@ -87,6 +87,16 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       });
   };
 
+  $scope.getLines = function(artes) {
+    ret = 0;
+
+    if (!artes) artes = $scope.artes;
+    var count = artes.split("\n").length;
+    ret += count;
+
+    return ret;
+  };
+
   $scope.logout = function() {
     $scope.init();
     LxNotificationService.success('Logout Successful!');
@@ -97,7 +107,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     if (n.length > 0) {
       return n[0].object.value;
     }
-
 
     var chapter = parseInt($scope.contentURI.substr(-2));
     chapter += 1;
@@ -114,7 +123,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   $scope.next = function() {
     if ($scope.verse < $scope.verses.length-1) {
       $scope.verse++;
-      $scope.line += 3;
+      $scope.line += $scope.getLines($scope.artes);
       $scope.render();
     } else {
       console.log('load next chapter');
