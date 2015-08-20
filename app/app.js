@@ -75,11 +75,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
 
-  $scope.setVideo = function (uri) {
-    $scope.video = uri;
-    $('#video').empty().append('<iframe width="420" height="315" src="'+uri+'"></iframe>');
-  };
-
   $scope.openDialog = function(elem, reset) {
       if (reset) {
           $scope.resetContact();
