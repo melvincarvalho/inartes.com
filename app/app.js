@@ -26,7 +26,7 @@ var TIMEOUT = 2000;
 var DEBUG = true;
 
 var scope = {};
-var gg;
+
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
