@@ -1,6 +1,4 @@
 var f,g;
-var db;
-
 
 var BIBO  = $rdf.Namespace("http://purl.org/ontology/bibo/#");
 var CHAT  = $rdf.Namespace("https://ns.rww.io/chat#");
@@ -24,7 +22,7 @@ var XHV   = $rdf.Namespace("http://www.w3.org/1999/xhtml/vocab#");
 
 var AUTHENDPOINT = "https://databox.me/";
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
-var TIMEOUT = 5000;
+var TIMEOUT = 2000;
 var DEBUG = true;
 
 var scope = {};
