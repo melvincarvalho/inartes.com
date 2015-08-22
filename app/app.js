@@ -460,6 +460,15 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.$apply();
   };
 
+  /**
+  * Renders the screen
+  */
+  $scope.keydown = function(event) {
+    console.log(event.which);
+    if (event.which === 39) {
+      $scope.next();
+    }
+  };
 
   /*
   * MAIN
