@@ -154,6 +154,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets number of lines from a string
+  * @param {String} the content
+  * @return {Number} number of lines
   */
   $scope.getNumLines = function(artes) {
     ret = 0;
@@ -167,6 +169,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets the next chapter from a document using rel=next
+  * @return {String} The next chapter
   */
   $scope.getNextChapter = function() {
     var n = g.statementsMatching($rdf.sym($scope.contentURI.split('#')[0]), XHV('next'));
@@ -226,6 +229,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets the fragment
+  * @param {String} the uri to get a fragment from
+  * @return {String} the fragment
   */
   $scope.getFragment = function(uri) {
     if (!uri) {
@@ -242,6 +247,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets the next line number
+  * @param {String} uri
+  * @return {Number} The verse number
   */
   $scope.getVerseNumber = function(uri) {
     if (!uri) {
@@ -262,6 +269,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets the next line number
+  * @param {String} uri
+  * @return {Number} The verse number
   */
   $scope.getLineNumber = function(uri) {
     if (!uri) {
@@ -279,6 +288,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets artes
+  * @param {String} uri
+  * @return {String} The content
   */
   $scope.getArtes = function(uri) {
     if (!uri) {
@@ -295,6 +306,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets chapter
+  * @param {String} uri
+  * @return {String} The chapter
   */
   $scope.getChapter = function(uri) {
     if (!uri) {
@@ -317,6 +330,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets title
+  * @param {String} uri
+  * @return {String} The title
   */
   $scope.getTitle = function(uri) {
     if (!uri) {
@@ -385,6 +400,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
   /**
   * Gets content URI or default
+  * @return {String} The content URI or default
   */
   $scope.getContentURI = function() {
     var contentURI;
@@ -461,7 +477,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
-  * Renders the screen
+  * Checks for keypresses
   */
   $scope.keydown = function(event) {
     console.log(event.which);
