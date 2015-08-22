@@ -148,7 +148,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
 
-
   /*
   * HELPER functions
   */
@@ -233,12 +232,85 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
+  * Gets the fragment
+  */
+  $scope.getFragment = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    if (uri.split('#').length === 1) return;
+
+    var fragment = uri.substring(uri.indexOf('#') + 1);
+
+    return fragment;
+  };
+
+  /**
+  * Gets the next line number
+  */
+  $scope.getVerseNumber = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var fragments = $scope.getFragments(uri);
+    if (!fragments || !fragments.length) return 1;
+
+    var fragment = $scope.getFragment(uri);
+
+    var index = fragments.indexOf(fragment);
+    if ( index !== -1 ) {
+      return index + 1;
+    }
+  };
+
+  /**
+  * Gets the next line number
+  */
+  $scope.getLineNumber = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var fragment = $scope.getFragment(uri);
+
+    if (!isNaN(parseInt(fragment))) {
+      return parseInt(fragment);
+    }
+
+  };
+
+  /**
+  * Gets artes
+  */
+  $scope.getArtes = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var artes = g.any($rdf.sym(uri), BIBO('content'));
+    if (artes && artes.value) {
+      return artes.value;
+    }
+
+  };
+
+  /**
   * Gets the next line in a page or flip to next page
   */
   $scope.next = function() {
-    if ($scope.verse < $scope.verses.length-1) {
+    var fragments = $scope.getFragments($scope.contentURI);
+
+    if ($scope.verse <= fragments.length) {
       $scope.verse++;
       $scope.line += $scope.getNumLines($scope.artes);
+      $scope.contentURI = $scope.contentURI.split('#')[0] + '#' + fragments[$scope.verse-1];
+      $location.search('contentURI', $scope.contentURI);
       $scope.render();
     } else {
       console.log('load next chapter');
@@ -267,25 +339,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       });
 
 
-    }
-  };
-
-  /**
-  * Tries to get a verse from a line
-  */
-  $scope.getVerseFromLine = function(line, verses) {
-    if (!line) return 1;
-    if (!verses) verses = $scope.verses;
-
-    var verse = 1;
-    var count = 1;
-
-    for (var i=0; i<verses.length; i++) {
-      var artes = verses[i].object.value;
-      count += $scope.getNumLines(artes);
-      if (count >= line) {
-        return i+1;
-      }
     }
   };
 
@@ -344,24 +397,23 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Renders the screen
   */
   $scope.render = function() {
-    var contentURI = $scope.getContentURI();
-    $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym(contentURI.split('#')[0]) );
+    // get content URI
+    $scope.contentURI = $scope.getContentURI();
 
-    if (contentURI.split('#').length > 1) {
-      var line = $location.search().contentURI.split('#')[1];
-      if (!isNaN(parseInt(line))) {
-        $scope.line = parseInt(line);
-        $scope.verse = $scope.getVerseFromLine(line);
-      }
-    }
+    // get and render verse number
+    $scope.verse = $scope.getVerseNumber($scope.contentURI);
 
+    // get and render line number
+    $scope.line = $scope.getLineNumber($scope.contentURI);
 
-    if ($scope.verses.length > $scope.verse) {
-      $scope.artes = $scope.verses[$scope.verse].object.value;
-      $location.search('contentURI', $scope.verses[$scope.verse].subject.value);
-    }
+    // get and render content
+    $scope.artes = $scope.getArtes($scope.contentURI);
 
-    console.log($scope.artes);
+    // get and render title
+
+    // get and render chapter
+
+    // render if necessary
     $scope.$apply();
   };
 
