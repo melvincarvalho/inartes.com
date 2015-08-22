@@ -324,7 +324,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       return;
     }
 
-    var title = g.any($rdf.sym(uri), DCT('title'));
+    var title = g.any($rdf.sym(uri.split('#')[0]), DCT('title'), null, $rdf.sym(uri.split('#')[0]));
     if (title && title.value) {
       return title.value;
     }
