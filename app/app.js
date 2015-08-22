@@ -1,4 +1,5 @@
 var f,g;
+var template;
 
 var BIBO  = $rdf.Namespace("http://purl.org/ontology/bibo/#");
 var CHAT  = $rdf.Namespace("https://ns.rww.io/chat#");
@@ -24,8 +25,6 @@ var AUTHENDPOINT = "https://databox.me/";
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var TIMEOUT = 2000;
 var DEBUG = true;
-
-var scope = {};
 
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
@@ -105,7 +104,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     }
 
     return stem + chapter;
-
   };
 
   $scope.next = function() {
@@ -180,9 +178,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.$apply();
   };
 
+  $scope.isNumber = angular.isNumber;
+
   // set init variables
   $scope.init = function() {
 
+    template = $scope;
     $scope.verse = 0;
     $scope.artes = 'loading...';
     $scope.chapter = 1;
