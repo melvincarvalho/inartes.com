@@ -301,6 +301,52 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
+  * Gets chapter
+  */
+  $scope.getChapter = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var chapter = g.any($rdf.sym(uri), BIBO('chapter'));
+    if (chapter && chapter.value) {
+      return chapter.value;
+    }
+
+    var url = $scope.contentURI.split('#')[0];
+    var ch = url.substr(-2);
+    if (!isNaN(parseInt(ch))) {
+      return parseInt(ch);
+    }
+
+  };
+
+  /**
+  * Gets title
+  */
+  $scope.getTitle = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var title = g.any($rdf.sym(uri), DCT('title'));
+    if (title && title.value) {
+      return title.value;
+    }
+
+    var url = $scope.contentURI.split('#')[0];
+    var slashes = url.split('/');
+    var last = slashes[slashes.length-1];
+    if (last) {
+      if (last.indexOf('inferno') === 0) return "Dante's Inferno";
+      return last;
+    }
+
+  };
+
+  /**
   * Gets the next line in a page or flip to next page
   */
   $scope.next = function() {
@@ -411,9 +457,11 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     // get and render content
     $scope.artes = $scope.getArtes($scope.contentURI);
 
-    // get and render title
-
     // get and render chapter
+    $scope.chapter = $scope.getChapter($scope.contentURI);
+
+    // get and render title
+    $scope.title = $scope.getTitle($scope.contentURI);
 
     // render if necessary
     $scope.$apply();
