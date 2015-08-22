@@ -28,7 +28,7 @@ var AUTHENDPOINT = "https://databox.me/";
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var TIMEOUT = 2000;
 var DEBUG = true;
-var defaultContentURI = 'https://inartes.databox.me/Public/dante/inferno-01';
+var defaultContentURI = 'https://inartes.databox.me/Public/dante/inferno-01#001';
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
@@ -95,10 +95,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.loginTLSButtonText = "Login";
     // display elements object
 
-    var contentURI = $scope.getContentURI();
-    $scope.contentURI = contentURI;
+    $scope.contentURI = $scope.getContentURI();
+    $location.search('contentURI', $scope.contentURI);
 
-    f.nowOrWhenFetched(contentURI.split('#')[0], undefined, function(ok, body) {
+    f.nowOrWhenFetched($scope.contentURI.split('#')[0], undefined, function(ok, body) {
       $scope.render();
     });
 
