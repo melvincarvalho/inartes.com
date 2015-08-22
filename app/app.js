@@ -169,7 +169,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Gets the next chapter from a document using rel=next
   */
   $scope.getNextChapter = function() {
-    var n = g.statementsMatching($rdf.sym($scope.contentURI), XHV('next'));
+    var n = g.statementsMatching($rdf.sym($scope.contentURI.split('#')[0]), XHV('next'));
     if (n.length > 0) {
       return n[0].object.value;
     }
@@ -306,7 +306,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   $scope.next = function() {
     var fragments = $scope.getFragments($scope.contentURI);
 
-    if ($scope.verse <= fragments.length) {
+    if ($scope.verse < fragments.length) {
       $scope.verse++;
       $scope.line += $scope.getNumLines($scope.artes);
       $scope.contentURI = $scope.contentURI.split('#')[0] + '#' + fragments[$scope.verse-1];
@@ -330,10 +330,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
           return;
         }
 
-        $scope.verse = 0;
+        $scope.verse = 1;
         $scope.line = 1;
         $scope.chapter++;
-        $scope.contentURI = next;
+        var fragments = $scope.getFragments(next);
+        $scope.contentURI = next + '#' + fragments[0];
+        $location.search('contentURI', $scope.contentURI);
 
         $scope.render();
       });
