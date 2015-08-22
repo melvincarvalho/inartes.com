@@ -75,18 +75,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
 
-  $scope.openDialog = function(elem, reset) {
-      if (reset) {
-          $scope.resetContact();
-      }
-      LxDialogService.open(elem);
-      $(document).keyup(function(e) {
-        if (e.keyCode===27) {
-          LxDialogService.close(elem);
-        }
-      });
-  };
-
   $scope.getLines = function(artes) {
     ret = 0;
 
