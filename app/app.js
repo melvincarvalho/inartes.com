@@ -399,6 +399,21 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
+  * Gets the previous line in a page or flip to previous page
+  */
+  $scope.prev = function() {
+    var fragments = $scope.getFragments($scope.contentURI);
+
+    if ($scope.verse > 1) {
+      $scope.verse--;
+      $scope.line -= $scope.getNumLines($scope.artes);
+      $scope.contentURI = $scope.contentURI.split('#')[0] + '#' + fragments[$scope.verse-1];
+      $location.search('contentURI', $scope.contentURI);
+      $scope.render();
+    }
+  };
+
+  /**
   * Gets content URI or default
   * @return {String} The content URI or default
   */
@@ -477,10 +492,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
-  * Checks for keypresses
+  * Checks for keypresses left and right arrow
   */
   $scope.keydown = function(event) {
     console.log(event.which);
+    if (event.which === 37) {
+      $scope.prev();
+    }
     if (event.which === 39) {
       $scope.next();
     }
