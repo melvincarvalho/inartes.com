@@ -225,13 +225,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
-  * Gets the next line number
-  */
-  $scope.getNextLine = function() {
-    return $scope.line += $scope.getNumLines($scope.artes);
-  };
-
-  /**
   * Gets the fragment
   */
   $scope.getFragment = function(uri) {
