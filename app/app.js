@@ -214,10 +214,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       contentURI = $location.search().contentURI.split('#')[0];
       if ($location.search().contentURI.split('#').length > 0) {
         var line = $location.search().contentURI.split('#')[1];
-        if (parseInt(line)) {
-          $scope.chapter = parseInt(contentURI.substr(-2));
+        if (!isNaN(parseInt(line))) {
           $scope.line = parseInt(line);
-          $scope.verse = (parseInt(line)-1)/3;
+          if (!isNaN(parseInt(contentURI.substr(-2)))) {
+            $scope.chapter = parseInt(contentURI.substr(-2));
+            $scope.verse = (parseInt(line)-1)/3;
+          }
         }
       }
     }
