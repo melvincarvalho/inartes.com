@@ -25,6 +25,7 @@ var AUTHENDPOINT = "https://databox.me/";
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var TIMEOUT = 2000;
 var DEBUG = true;
+var defaultContentURI = 'https://inartes.databox.me/Public/dante/inferno-01';
 
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
@@ -36,16 +37,21 @@ var App = angular.module('myApp', [
 
 App.config(function($locationProvider) {
   $locationProvider
-    .html5Mode({ enabled: true, requireBase: false });
+  .html5Mode({ enabled: true, requireBase: false });
 });
 
 App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNotificationService, LxProgressService, LxDialogService, ngAudio) {
 
-  // save app configuration if it's the first time the app runs
+  /**
+   * Gets initialized the app
+   */
   $scope.initApp = function() {
     $scope.init();
   };
 
+  /**
+   * TLS login
+   */
   $scope.TLSlogin = function() {
     $scope.loginTLSButtonText = 'Logging in...';
     console.log('logging in');
@@ -74,7 +80,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
 
-  $scope.getLines = function(artes) {
+  /**
+   * Gets number of lines from a string
+   */
+  $scope.getNumLines = function(artes) {
     ret = 0;
 
     if (!artes) artes = $scope.artes;
@@ -84,11 +93,17 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     return ret;
   };
 
+  /**
+   * Logout
+   */
   $scope.logout = function() {
     $scope.init();
     LxNotificationService.success('Logout Successful!');
   };
 
+  /**
+   * Gets the next chapter from a document using rel=next
+   */
   $scope.getNextChapter = function() {
     var n = g.statementsMatching($rdf.sym($scope.contentURI), XHV('next'));
     if (n.length > 0) {
@@ -106,10 +121,59 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     return stem + chapter;
   };
 
+  /**
+   * Gets all fragments from a URI
+   * @param {String} uri
+   * @return {Array} fragments All known fragments from that uri
+   */
+  $scope.getFragments = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+    }
+
+    var res = g.statementsMatching( null, null, null, $rdf.sym(uri.split('#')[0]) );
+
+    if (!res || !res.length) return null;
+
+    var ret = [];
+
+    for (var i=0; i<res.length; i++) {
+      if (res[i].subject && res[i].subject.value && res[i].subject.value.split('#').length > 1 ) {
+        var subject = res[i].subject.value;
+        var fragment = subject.substring(subject.indexOf('#') + 1);
+        if (ret.indexOf(fragment) === -1) {
+          ret.push(fragment);
+        }
+      }
+    }
+
+    // sort numerically or alphabetically
+    ret = ret.sort(function(a,b){
+      if ( !isNaN(a) && !isNaN(b) ) {
+        return a - b;
+      } else {
+        return a < b;
+      }
+    });
+
+    return ret;
+
+  };
+
+  /**
+   * Gets the next line number
+   */
+  $scope.getNextLine = function() {
+    return $scope.line += $scope.getNumLines($scope.artes);
+  };
+
+  /**
+   * Gets the next line in a page or flip to next page
+   */
   $scope.next = function() {
     if ($scope.verse < $scope.verses.length-1) {
       $scope.verse++;
-      $scope.line += $scope.getLines($scope.artes);
+      $scope.line += $scope.getNumLines($scope.artes);
       $scope.render();
     } else {
       console.log('load next chapter');
@@ -141,6 +205,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     }
   };
 
+  /**
+   * Pay when required
+   */
   function pay() {
     if (!$scope.user) alert('Please log in first.');
     alert('paying ' + $scope.user);
@@ -168,19 +235,68 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     console.log(wc);
   }
 
+  /**
+   * Tries to get a verse from a line
+   */
+  $scope.getVerseFromLine = function(line, verses) {
+    if (!line) return 1;
+    if (!verses) verses = $scope.verses;
+
+    var verse = 1;
+    var count = 1;
+
+    for (var i=0; i<verses.length; i++) {
+      var artes = verses[i].object.value;
+      count += $scope.getNumLines(artes);
+      if (count >= line) {
+        return i+1;
+      }
+    }
+  };
+
+  /**
+   * Gets content URI or default
+   */
+  $scope.getContentURI = function() {
+    var contentURI;
+    if ($location.search().contentURI) {
+      contentURI = $location.search().contentURI;
+    } else {
+      contentURI = defaultContentURI;
+    }
+    return contentURI;
+  };
+
+  /**
+   * Renders the screen
+   */
   $scope.render = function() {
-    $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym($scope.contentURI) );
+    var contentURI = $scope.getContentURI();
+    $scope.verses = g.statementsMatching(undefined, BIBO('content'), undefined, $rdf.sym(contentURI.split('#')[0]) );
+
+    if (contentURI.split('#').length > 1) {
+      var line = $location.search().contentURI.split('#')[1];
+      if (!isNaN(parseInt(line))) {
+        $scope.line = parseInt(line);
+        $scope.verse = $scope.getVerseFromLine(line);
+      }
+    }
+
+
     if ($scope.verses.length > $scope.verse) {
       $scope.artes = $scope.verses[$scope.verse].object.value;
       $location.search('contentURI', $scope.verses[$scope.verse].subject.value);
     }
+
     console.log($scope.artes);
     $scope.$apply();
   };
 
   $scope.isNumber = angular.isNumber;
 
-  // set init variables
+  /**
+   * Initialize the app
+   */
   $scope.init = function() {
 
     template = $scope;
@@ -191,7 +307,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     $scope.defaultSound = 'audio/button-3.mp3';
     $scope.audio = ngAudio.load($scope.defaultSound);
-
 
     // start in memory DB
     g = $rdf.graph();
@@ -209,23 +324,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.loginTLSButtonText = "Login";
     // display elements object
 
-    var contentURI = 'https://inartes.databox.me/Public/dante/inferno-01';
-    if ($location.search().contentURI) {
-      contentURI = $location.search().contentURI.split('#')[0];
-      if ($location.search().contentURI.split('#').length > 0) {
-        var line = $location.search().contentURI.split('#')[1];
-        if (!isNaN(parseInt(line))) {
-          $scope.line = parseInt(line);
-          if (!isNaN(parseInt(contentURI.substr(-2)))) {
-            $scope.chapter = parseInt(contentURI.substr(-2));
-            $scope.verse = (parseInt(line)-1)/3;
-          }
-        }
-      }
-    }
+    var contentURI = $scope.getContentURI();
     $scope.contentURI = contentURI;
 
-    f.nowOrWhenFetched(contentURI, undefined, function(ok, body) {
+    f.nowOrWhenFetched(contentURI.split('#')[0], undefined, function(ok, body) {
       $scope.render();
     });
 
