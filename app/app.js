@@ -125,7 +125,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
         //LxNotificationService.success('Login Successful!');
         $scope.loggedIn = true;
-        $scope.user = user;
+        $scope.me = user;
         console.log('success logged in a ' + user);
       } else {
         //LxNotificationService.error('WebID-TLS authentication failed.');
@@ -435,20 +435,20 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Pay when required
   */
   function pay() {
-    if (!$scope.user) alert('Please log in first.');
-    alert('paying ' + $scope.user);
+    if (!$scope.me) alert('Please log in first.');
+    alert('paying ' + $scope.me);
 
 
     var bot = 'https://inartes.databox.me/profile/card#me';
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
-    wc += '  <https://w3id.org/cc#source> \n    <' + $scope.user + '> ;\n';
+    wc += '  <https://w3id.org/cc#source> \n    <' + $scope.me + '> ;\n';
     wc += '  <https://w3id.org/cc#destination> \n    <' + bot + '> ;\n';
     wc += '  <https://w3id.org/cc#amount> "' + 1 + '" ;\n';
     wc += '  <https://w3id.org/cc#currency> \n    <https://w3id.org/cc#bit> .\n';
 
 
-    var hash = CryptoJS.SHA256($scope.user).toString();
+    var hash = CryptoJS.SHA256($scope.me).toString();
 
     function postFile(file, data) {
       xhr = new XMLHttpRequest();
@@ -498,6 +498,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     console.log(event.which);
     if (event.which === 37) {
       $scope.prev();
+    }
+    if (event.which === 38) {
+      $scope.TLSlogin();
     }
     if (event.which === 39) {
       $scope.next();
