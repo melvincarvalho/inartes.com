@@ -158,6 +158,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       method: 'PATCH',
       url: $scope.contentURI.split('#')[0],
       withCredentials: true,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      },
       data: "INSERT DATA { <"+ $scope.me +"> <http://ontologi.es/like#likes> <"+ $scope.contentURI +"> . } "
     }).success(function(data, status, headers) {
       // add dir to local list
@@ -175,6 +178,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       method: 'PATCH',
       url: $scope.contentURI.split('#')[0],
       withCredentials: true,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      },
       data: "DELETE DATA { <"+ $scope.me +"> <http://ontologi.es/like#likes> <"+ $scope.contentURI +"> . } "
     }).success(function(data, status, headers) {
       // add dir to local list
