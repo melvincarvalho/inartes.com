@@ -149,6 +149,44 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
 
   /*
+  * WEB functions
+  */
+  $scope.like = function() {
+    if (!$scope.me) return;
+    if (!$scope.contentURI) return;
+    $http({
+      method: 'PATCH',
+      url: $scope.contentURI.split('#')[0],
+      withCredentials: true,
+      data: "INSERT DATA { <"+ $scope.me +"> <http://ontologi.es/like#likes> <"+ $scope.contentURI +"> . } "
+    }).success(function(data, status, headers) {
+      // add dir to local list
+      console.log('success liked ' + $scope.me);
+    }).error(function(data, status, headers) {
+      console.log('Could not like post: HTTP '+status);
+    });
+  };
+
+
+  $scope.unlike = function() {
+    if (!$scope.me) return;
+    if (!$scope.contentURI) return;
+    $http({
+      method: 'PATCH',
+      url: $scope.contentURI.split('#')[0],
+      withCredentials: true,
+      data: "DELETE DATA { <"+ $scope.me +"> <http://ontologi.es/like#likes> <"+ $scope.contentURI +"> . } "
+    }).success(function(data, status, headers) {
+      // add dir to local list
+      console.log('success liked ' + $scope.me);
+    }).error(function(data, status, headers) {
+      console.log('Could not like post: HTTP '+status);
+    });
+  };
+
+
+
+  /*
   * HELPER functions
   */
 
