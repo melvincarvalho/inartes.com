@@ -75,6 +75,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.artes = 'loading...';
     $scope.chapter = 1;
     $scope.line = 1;
+    $scope.likeIcon = 'favorite_border';
 
     $scope.defaultSound = 'audio/button-3.mp3';
     $scope.audio = ngAudio.load($scope.defaultSound);
@@ -151,6 +152,21 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   /*
   * WEB functions
   */
+
+  /**
+  * Toggle
+  */
+  $scope.toggle = function() {
+    if ($scope.likeIcon === 'favorite') {
+      $scope.unlike();
+    } else {
+      $scope.like();
+    }
+  };
+
+  /**
+  * Like
+  */
   $scope.like = function() {
     if (!$scope.me) return;
     if (!$scope.contentURI) return;
@@ -165,12 +181,16 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     }).success(function(data, status, headers) {
       // add dir to local list
       console.log('success liked ' + $scope.me);
+      $scope.likeIcon = 'favorite';
     }).error(function(data, status, headers) {
       console.log('Could not like post: HTTP '+status);
     });
   };
 
 
+  /**
+  * Unlike
+  */
   $scope.unlike = function() {
     if (!$scope.me) return;
     if (!$scope.contentURI) return;
@@ -184,7 +204,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       data: "DELETE DATA { <"+ $scope.me +"> <http://ontologi.es/like#likes> <"+ $scope.contentURI +"> . } "
     }).success(function(data, status, headers) {
       // add dir to local list
-      console.log('success liked ' + $scope.me);
+      $scope.likeIcon = 'favorite_border';
+      console.log('success unliked ' + $scope.me);
     }).error(function(data, status, headers) {
       console.log('Could not like post: HTTP '+status);
     });
@@ -252,7 +273,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       if (res[i].subject && res[i].subject.value && res[i].subject.value.split('#').length > 1 ) {
         var subject = res[i].subject.value;
         var fragment = subject.substring(subject.indexOf('#') + 1);
-        if (ret.indexOf(fragment) === -1) {
+        if (ret.indexOf(fragment) === -1 && subject.indexOf(uri.split('#')[0]) === 0) {
           ret.push(fragment);
         }
       }
@@ -399,6 +420,26 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
+  * Gets like
+  * @param {String} uri
+  * @return {String} The like icon
+  */
+  $scope.getLike = function(uri) {
+    if (!uri) {
+      console.error('uri is required');
+      return;
+    }
+
+    var title = g.any($scope.me, LIKE('likes'), null, $rdf.sym(uri.split('#')[0]));
+    if (title && title.value) {
+      return 'favorite';
+    } else {
+      return 'favorite_outline';
+    }
+
+  };
+
+  /**
   * Gets the next line in a page or flip to next page
   */
   $scope.next = function() {
@@ -531,6 +572,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     // get and render title
     $scope.title = $scope.getTitle($scope.contentURI);
 
+    // get and render like
+    $scope.likeIcon = $scope.getLike($scope.contentURI);
+
     // render if necessary
     $scope.$apply();
   };
@@ -539,7 +583,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Checks for keypresses left and right arrow
   */
   $scope.keydown = function(event) {
-    console.log(event.which);
     if (event.which === 37) {
       $scope.prev();
     }
@@ -552,6 +595,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     }
     if (event.which === 39) {
       $scope.next();
+    }
+    if (event.which === 40) {
+      if (!$scope.me) {
+        $scope.TLSlogin();
+      } else {
+        $scope.unlike();
+      }
     }
   };
 

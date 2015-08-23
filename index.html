@@ -93,8 +93,11 @@
                   <h4 ng-if="artes.indexOf('.jpg') === -1">{{artes}}</h4>
                 </div>
               </div>
-              <div ng-click="next()" class="mdl-card__actions">
-                <a href="#" ng-audio="audio/button-3.mp3"  class="mdl-button">Next</a>
+              <div class="mdl-card__actions">
+                <a ng-click="next()" href="#" ng-audio="audio/button-3.mp3"  class="mdl-button">Next</a>
+                <button ng-show="me" ng-click="toggle()" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="like">
+                  <i class="material-icons">{{likeIcon}}</i>
+                </button>
               </div>
             </div>
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn2">
