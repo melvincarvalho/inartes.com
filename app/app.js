@@ -590,6 +590,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       if (!$scope.me) {
         $scope.TLSlogin();
       } else {
+        event.preventDefault();
         $scope.like();
       }
     }
@@ -600,6 +601,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       if (!$scope.me) {
         $scope.TLSlogin();
       } else {
+        event.preventDefault();
         $scope.unlike();
       }
     }
