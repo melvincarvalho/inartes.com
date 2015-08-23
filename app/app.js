@@ -544,7 +544,11 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       $scope.prev();
     }
     if (event.which === 38) {
-      $scope.TLSlogin();
+      if (!$scope.me) {
+        $scope.TLSlogin();
+      } else {
+        $scope.like();
+      }
     }
     if (event.which === 39) {
       $scope.next();
