@@ -182,6 +182,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       // add dir to local list
       console.log('success liked ' + $scope.me);
       $scope.likeIcon = 'favorite';
+      g.add($rdf.sym($scope.me), LIKE('likes'), $rdf.sym($scope.contentURI),  $rdf.sym($scope.contentURI.split('#')[0]));
     }).error(function(data, status, headers) {
       console.log('Could not like post: HTTP '+status);
     });
@@ -205,6 +206,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     }).success(function(data, status, headers) {
       // add dir to local list
       $scope.likeIcon = 'favorite_border';
+      g.remove($rdf.st($rdf.sym($scope.me), LIKE('likes'), $rdf.sym($scope.contentURI),  $rdf.sym($scope.contentURI.split('#')[0])));
+
       console.log('success unliked ' + $scope.me);
     }).error(function(data, status, headers) {
       console.log('Could not like post: HTTP '+status);
@@ -430,8 +433,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       return;
     }
 
-    var title = g.any($scope.me, LIKE('likes'), null, $rdf.sym(uri.split('#')[0]));
-    if (title && title.value) {
+    var like = g.statementsMatching($rdf.sym($scope.me), LIKE('likes'), $rdf.sym(uri), $rdf.sym(uri.split('#')[0]));
+    if (like && like.length) {
       return 'favorite';
     } else {
       return 'favorite_outline';
@@ -580,7 +583,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
   /**
-  * Checks for keypresses left and right arrow
+  * Checks for keypresses of arrow keys
   */
   $scope.keydown = function(event) {
     if (event.which === 37) {
