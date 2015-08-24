@@ -456,11 +456,11 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       $scope.render();
     } else {
       console.log('load next chapter');
-      var next = $scope.getNextChapter();
+      $scope.nextURI = $scope.getNextChapter();
 
 
-      f.nowOrWhenFetched(next, undefined, function(ok, body) {
-        var error = g.statementsMatching($rdf.sym(next), LINK('error'));
+      f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
+        var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
 
         if (error.length>0) {
           // process 402 or 403
@@ -475,8 +475,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
         $scope.verse = 1;
         $scope.line = 1;
         $scope.chapter++;
-        var fragments = $scope.getFragments(next);
-        $scope.contentURI = next + '#' + fragments[0];
+        var fragments = $scope.getFragments($scope.nextURI);
+        $scope.contentURI = $scope.nextURI + '#' + fragments[0];
         $location.search('contentURI', $scope.contentURI);
 
         $scope.render();
@@ -531,7 +531,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     var destination = 'https://inartes.databox.me/profile/card#me';
     var amount = 1;
     var inbox = 'https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/';
-    
+    var resource = $scope.nextURI;
+
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
     wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
