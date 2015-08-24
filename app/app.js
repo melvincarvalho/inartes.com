@@ -523,16 +523,20 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Pay when required
   */
   function pay() {
-    if (!$scope.me) alert('Please log in first.');
+    if (!$scope.me) alert('Please log in first. (use up arrow)');
     alert('paying ' + $scope.me);
 
-
-    var bot = 'https://inartes.databox.me/profile/card#me';
+    // TODO Follow your nose to get params
+    var source = $scope.me;
+    var destination = 'https://inartes.databox.me/profile/card#me';
+    var amount = 1;
+    var inbox = 'https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/';
+    
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
-    wc += '  <https://w3id.org/cc#source> \n    <' + $scope.me + '> ;\n';
-    wc += '  <https://w3id.org/cc#destination> \n    <' + bot + '> ;\n';
-    wc += '  <https://w3id.org/cc#amount> "' + 1 + '" ;\n';
+    wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
+    wc += '  <https://w3id.org/cc#destination> \n    <' + destination + '> ;\n';
+    wc += '  <https://w3id.org/cc#amount> "' + amount + '" ;\n';
     wc += '  <https://w3id.org/cc#currency> \n    <https://w3id.org/cc#bit> .\n';
 
 
@@ -545,7 +549,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       xhr.send(data);
     }
 
-    postFile('https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/', wc);
+    postFile(inbox, wc);
     console.log(wc);
   }
 
