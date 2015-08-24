@@ -17,7 +17,7 @@ $turtle .= "<https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/
 header('Access-Control-Allow-Origin : *');
 header("Vary: Accept");
 
-http_response_code(402);
+http_response_code(200);
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/turtle")) {
   header("Content-Type: application/turtle");

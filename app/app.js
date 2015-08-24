@@ -457,30 +457,38 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     } else {
       console.log('load next chapter');
       $scope.nextURI = $scope.getNextChapter();
+      // TODO this should come from header
+      var paymentDomain = 'http://inartes.com';
+      $scope.paymentURI = paymentDomain + '/.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
 
+      f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
 
-      f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
-        var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
+        f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
+          var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
 
-        if (error.length>0) {
-          // process 402 or 403
-          var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nNext chapter costs 1 bit.\nWould you like to buy access?');
-          if (c) {
-            $scope.TLSlogin();
-            setTimeout(pay, 1000);
+          if (error.length>0) {
+            // process 402 or 403
+            var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nNext chapter costs 1 bit.\nWould you like to buy access?');
+            if (c) {
+              $scope.TLSlogin();
+              setTimeout(pay, 1000);
+            }
+            return;
           }
-          return;
-        }
 
-        $scope.verse = 1;
-        $scope.line = 1;
-        $scope.chapter++;
-        var fragments = $scope.getFragments($scope.nextURI);
-        $scope.contentURI = $scope.nextURI + '#' + fragments[0];
-        $location.search('contentURI', $scope.contentURI);
+          $scope.verse = 1;
+          $scope.line = 1;
+          $scope.chapter++;
+          var fragments = $scope.getFragments($scope.nextURI);
+          $scope.contentURI = $scope.nextURI + '#' + fragments[0];
+          $location.search('contentURI', $scope.contentURI);
 
-        $scope.render();
+          $scope.render();
+        });
+
+
       });
+
 
 
     }
