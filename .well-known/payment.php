@@ -9,7 +9,7 @@ $wallet = 'inartes.com';
 $turtle = "<$uri> <http://xmlns.com/foaf/0.1/maker> <$owner> . \n";
 $turtle .= "<$uri> <https://w3id.org/commerce/rate> 1 . \n";
 $turtle .= "<$owner> <https://w3id.org/cc#wallet> <https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartex.com/wallet#this> . \n";
-$turtle .= "<https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartex.com/wallet#this> <https://w3id.org/cc#inbox> <https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartex.com/inbox/> . \n";
+$turtle .= "<https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/wallet#this> <https://w3id.org/cc#inbox> <https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartex.com/inbox/> . \n";
 
 
 

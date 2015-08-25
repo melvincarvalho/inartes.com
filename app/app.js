@@ -6,6 +6,7 @@ var template;
 
 var BIBO  = $rdf.Namespace("http://purl.org/ontology/bibo/#");
 var CHAT  = $rdf.Namespace("https://ns.rww.io/chat#");
+var COMM  = $rdf.Namespace("https://w3id.org/commerce/");
 var CURR  = $rdf.Namespace("https://w3id.org/cc#");
 var DCT   = $rdf.Namespace("http://purl.org/dc/terms/");
 var FACE  = $rdf.Namespace("https://graph.facebook.com/schema/~/");
@@ -457,37 +458,37 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     } else {
       console.log('load next chapter');
       $scope.nextURI = $scope.getNextChapter();
-      // TODO this should come from header
-      var paymentDomain = 'http://inartes.com';
-      $scope.paymentURI = paymentDomain + '/.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
 
-      f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
+      f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
 
-        f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
-          var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
+        var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
 
-          if (error.length>0) {
+        if (error.length>0) {
+          // TODO this should come from header
+          var paymentDomain = 'http://inartes.com';
+          $scope.paymentURI = paymentDomain + '/.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
+          f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
             // process 402 or 403
-            var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nNext chapter costs 1 bit.\nWould you like to buy access?');
+            var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nWould you like to buy access?');
             if (c) {
-              $scope.TLSlogin();
-              setTimeout(pay, 1000);
+              pay()
             }
             return;
-          }
+          });
 
-          $scope.verse = 1;
-          $scope.line = 1;
-          $scope.chapter++;
-          var fragments = $scope.getFragments($scope.nextURI);
-          $scope.contentURI = $scope.nextURI + '#' + fragments[0];
-          $location.search('contentURI', $scope.contentURI);
+        }
 
-          $scope.render();
-        });
+        $scope.verse = 1;
+        $scope.line = 1;
+        $scope.chapter++;
+        var fragments = $scope.getFragments($scope.nextURI);
+        $scope.contentURI = $scope.nextURI + '#' + fragments[0];
+        $location.search('contentURI', $scope.contentURI);
 
-
+        $scope.render();
       });
+
+
 
 
 
@@ -532,15 +533,28 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   */
   function pay() {
     if (!$scope.me) alert('Please log in first. (use up arrow)');
-    alert('paying ' + $scope.me);
 
     // TODO Follow your nose to get params
     var source = $scope.me;
-    var destination = 'https://inartes.databox.me/profile/card#me';
-    var amount = 1;
-    var inbox = 'https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/';
+    var hash = CryptoJS.SHA256($scope.me).toString();
+    //var destination = 'https://inartes.databox.me/profile/card#me';
+    //var amount = 1;
+    //var inbox = 'https://gitpay.databox.me/Public/.wallet/github.com/melvincarvalho/inartes.com/inbox/' + hash + '/';
     var resource = $scope.nextURI;
 
+    var amount = g.any($rdf.sym($scope.nextURI.split('#')[0]), COMM('rate'));
+    if (amount) amount = amount.value;
+
+    var destination = g.any($rdf.sym($scope.nextURI.split('#')[0]), FOAF('maker'));
+    if (destination) destination = destination.value;
+
+    var wallet = g.any($rdf.sym(destination), CURR('wallet'));
+    if (wallet) wallet = wallet.value;
+
+    var inbox = g.any($rdf.sym(wallet), CURR('inbox'));
+    if (inbox) inbox = inbox.value + hash + '/';
+
+    alert('paying ' + amount + ' bits to ' + destination + ' \ninbox : ' + inbox);
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
     wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
@@ -549,7 +563,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     wc += '  <https://w3id.org/cc#currency> \n    <https://w3id.org/cc#bit> .\n';
 
 
-    var hash = CryptoJS.SHA256($scope.me).toString();
 
     function postFile(file, data) {
       xhr = new XMLHttpRequest();
