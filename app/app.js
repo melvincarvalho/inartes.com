@@ -25,13 +25,13 @@ var URN   = $rdf.Namespace("urn:");
 var XHV   = $rdf.Namespace("http://www.w3.org/1999/xhtml/vocab#");
 
 
-var AUTHENDPOINT = "https://databox.me/";
-var PROXY = "https://rww.io/proxy.php?uri={uri}";
+var AUTHENDPOINT = "https://klaranet.com/";
+//var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var TIMEOUT = 2000;
 var DEBUG = true;
 var defaultContentURI = 'https://inartes.databox.me/Public/dante/inferno-01#001';
 
-$rdf.Fetcher.crossSiteProxyTemplate=PROXY;
+//$rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
 
 /**
@@ -85,8 +85,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     g = $rdf.graph();
     f = $rdf.fetcher(g);
     // add CORS proxy
-    var PROXY      = "https://data.fm/proxy?uri={uri}";
-    var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
+    //var PROXY      = "https://data.fm/proxy?uri={uri}";
+    //var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
     //$rdf.Fetcher.crossSiteProxyTemplate=PROXY;
     var kb         = $rdf.graph();
     var fetcher    = $rdf.fetcher(kb);
