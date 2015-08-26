@@ -85,9 +85,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     g = $rdf.graph();
     f = $rdf.fetcher(g);
     // add CORS proxy
-    //var PROXY      = "https://data.fm/proxy?uri={uri}";
+    var PROXY      = "https://klaranet.com/proxy?uri={uri}";
     //var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
-    //$rdf.Fetcher.crossSiteProxyTemplate=PROXY;
+    $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
     var kb         = $rdf.graph();
     var fetcher    = $rdf.fetcher(kb);
 
@@ -465,13 +465,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
         if (error.length>0) {
           // TODO this should come from header
-          var paymentDomain = 'http://inartes.com';
-          $scope.paymentURI = paymentDomain + '/.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
+          var paymentDomain = window.location.toString().split('?')[0];
+          $scope.paymentURI = paymentDomain + '.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
           f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
             // process 402 or 403
             var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nWould you like to buy access?');
             if (c) {
-              pay()
+              pay();
             }
             return;
           });
@@ -560,6 +560,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
     wc += '  <https://w3id.org/cc#destination> \n    <' + destination + '> ;\n';
     wc += '  <https://w3id.org/cc#amount> "' + amount + '" ;\n';
+    wc += '  <https://w3id.org/cc#variable> "' + resource + '" ;\n';
     wc += '  <https://w3id.org/cc#currency> \n    <https://w3id.org/cc#bit> .\n';
 
 
