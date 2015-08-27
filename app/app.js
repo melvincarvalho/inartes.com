@@ -583,6 +583,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
 
     console.log('paying ' + amount + ' bits to ' + destination + ' \ninbox : ' + inbox);
+    $scope.balance -= amount;
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
     wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
