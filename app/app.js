@@ -78,8 +78,13 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.line = 1;
     $scope.likeIcon = 'favorite_border';
     $scope.balance = 0;
-    $scope.defaultAPI = 'http://gitpay.org/wallet/github.com/melvincarvalho/inartes.com/api/v1/';
-    $scope.api = $scope.defaultAPI;
+    $scope.defaultAPI = 'http://klaranet/wallet/inartes.com/api/v1/';
+    if ( $location.search('api') ) {
+      $scope.api = $location.search('api');
+    } else {
+      $scope.api = $scope.defaultAPI;
+    }
+
     $scope.amount = 25; // default cost
 
     $scope.defaultSound = 'audio/button-3.mp3';
@@ -182,7 +187,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     error(function(data, status, headers, config) {
       // log error
     });
-  },
+  };
 
   /**
   * Toggle
@@ -520,10 +525,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
         }
 
       });
-
-
-
-
 
     }
   };
