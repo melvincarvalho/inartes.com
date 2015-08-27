@@ -605,7 +605,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
     for (var i=0; i<error.length; i++) {
-      $rdf.remove(error[i]);
+      g.remove(error[i]);
     }
 
     var DELAY = 3000;
