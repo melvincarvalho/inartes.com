@@ -80,6 +80,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.balance = 0;
     $scope.defaultAPI = 'http://gitpay.org/wallet/github.com/melvincarvalho/inartes.com/api/v1/';
     $scope.api = $scope.defaultAPI;
+    $scope.amount = 25; // default cost
 
     $scope.defaultSound = 'audio/button-3.mp3';
     $scope.audio = ngAudio.load($scope.defaultSound);
@@ -576,6 +577,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     var amount = g.any($rdf.sym($scope.nextURI.split('#')[0]), COMM('rate'));
     if (amount) amount = amount.value;
+    $scope.amount = amount;
 
     var destination = g.any($rdf.sym($scope.nextURI.split('#')[0]), FOAF('maker'));
     if (destination) destination = destination.value;

@@ -172,12 +172,12 @@
       <div class="dialog__content p+">
         <p>The next article is paid content.  Your balance is <strong>{{balance}} bits</strong>.</p>
 
-        <p>Would you like to pay <strong>25 bits</strong> for this content?</p>
-        <br>
+        <p>You would need to pay <strong>{{amount}} bits</strong> for this content?</p>
+        <p ng-hide="amount <= balance">Sorry, you do not have enough funds to view this article, please top up your account.</p>
       </div>
       <div class="dialog__actions">
           <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close>Cancel</button>
-          <button ng-click="agree()" class="btn btn--m btn--black btn--flat" lx-ripple>Agree</button>
+          <button ng-show="amount <= balance" ng-click="agree()" class="btn btn--m btn--black btn--flat" lx-ripple>Agree</button>
       </div>
     </lx-dialog>
 
