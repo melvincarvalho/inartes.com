@@ -487,7 +487,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       console.log('load next chapter');
       $scope.nextURI = $scope.getNextChapter();
 
-      f.nowOrWhenFetched($scope.nextURI, undefined, function(ok, body) {
+      f.requestURI($scope.nextURI, undefined, true, function(ok, body) {
 
         var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
 
@@ -602,6 +602,12 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     postFile(inbox, wc);
     console.log(wc);
+
+    var error = g.statementsMatching($rdf.sym($scope.nextURI), LINK('error'));
+    for (var i=0; i<error.length; i++) {
+      $rdf.remove(error[i]);
+    }
+
     var DELAY = 3000;
     setTimeout($scope.next, DELAY);
   }
