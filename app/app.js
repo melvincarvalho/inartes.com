@@ -77,6 +77,9 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.chapter = 1;
     $scope.line = 1;
     $scope.likeIcon = 'favorite_border';
+    $scope.balance = 7000;
+    $scope.defaultAPI = 'http://gitpay.org/wallet/github.com/melvincarvalho/inartes.com/api/v1/';
+    $scope.api = $scope.defaultAPI;
 
     $scope.defaultSound = 'audio/button-3.mp3';
     $scope.audio = ngAudio.load($scope.defaultSound);
@@ -129,6 +132,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
         $scope.loggedIn = true;
         $scope.me = user;
         console.log('success logged in a ' + user);
+        $scope.afterLogin();
       } else {
         //LxNotificationService.error('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');
@@ -149,10 +153,34 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     LxNotificationService.success('Logout Successful!');
   };
 
+  /**
+  * After Login Hook
+  */
+  $scope.afterLogin = function() {
+    $scope.fetchBalance();
+  };
+
 
   /*
   * WEB functions
   */
+
+
+  /**
+  * fetch balance
+  */
+  $scope.fetchBalance = function() {
+    if (!$scope.me) return;
+    if (!$scope.api) return;
+    var balanceURI = $scope.api + 'balance?uri=' + encodeURIComponent($scope.me);
+    $http.get(balanceURI).
+    success(function(data, status, headers, config) {
+      $scope.balance = data.amount;
+    }).
+    error(function(data, status, headers, config) {
+      // log error
+    });
+  },
 
   /**
   * Toggle
@@ -469,10 +497,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
           $scope.paymentURI = paymentDomain + '.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
           f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
             // process 402 or 403
-            var c = confirm('HTTP 402, payment required!\nFirst two chapters are free.\nWould you like to buy access?');
-            if (c) {
-              pay();
-            }
+            $scope.openDialog('pay');
             return;
           });
 
@@ -554,6 +579,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     var inbox = g.any($rdf.sym(wallet), CURR('inbox'));
     if (inbox) inbox = inbox.value + hash + '/';
 
+
     alert('paying ' + amount + ' bits to ' + destination + ' \ninbox : ' + inbox);
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
@@ -608,6 +634,28 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     // render if necessary
     $scope.$apply();
   };
+
+  /**
+  * Opens a dialog
+  */
+  $scope.openDialog = function(elem, reset) {
+      LxDialogService.open(elem);
+      $(document).keyup(function(e) {
+        if (e.keyCode===27) {
+          LxDialogService.close(elem);
+        }
+      });
+  };
+
+  /**
+  * Agrees to a payment
+  */
+  $scope.agree = function(elem, reset) {
+      LxDialogService.close('pay');
+      pay();
+  };
+
+
 
   /**
   * Checks for keypresses of arrow keys

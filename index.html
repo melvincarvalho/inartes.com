@@ -51,6 +51,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
+    <link rel="stylesheet" href="bower_components/lumx/dist/lumx.css">
     <link rel="stylesheet" href="material.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -152,6 +153,35 @@
         </footer>
       </main>
     </div>
+
+
+    <!-- About -->
+    <lx-dialog class="dialog dialog--l" auto-close="true" id="pay">
+      <div class="dialog__header">
+        <div class="toolbar bgc-blue-A700 pl+">
+          <span class="toolbar__label tc-white fs-title">
+            HTTP 402 Payment Required
+          </span>
+          <div class="toolbar__right">
+            <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+              <span aria-hidden="true" class="mdi mdi-close"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog__content p+">
+        <p>The next article is paid content.  Your balance is <strong>{{balance}} bits</strong>.</p>
+
+        <p>Would you like to pay <strong>25 bits</strong> for this content?</p>
+        <br>
+      </div>
+      <div class="dialog__actions">
+          <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close>Cancel</button>
+          <button ng-click="agree()" class="btn btn--m btn--black btn--flat" lx-ripple>Agree</button>
+      </div>
+    </lx-dialog>
+
+
     <script src="material.min.js"></script>
     <!-- Deps -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
