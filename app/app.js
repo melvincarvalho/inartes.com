@@ -510,7 +510,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
           $location.search('contentURI', $scope.contentURI);
 
           $scope.render();
-          
+
         }
 
       });
@@ -602,6 +602,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     postFile(inbox, wc);
     console.log(wc);
+    var DELAY = 3000;
+    setTime(next, DELAY);
   }
 
   /*
