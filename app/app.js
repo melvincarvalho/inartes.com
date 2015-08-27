@@ -79,8 +79,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.likeIcon = 'favorite_border';
     $scope.balance = 0;
     $scope.defaultAPI = 'http://klaranet/wallet/inartes.com/api/v1/';
-    if ( $location.search('api') ) {
-      $scope.api = $location.search('api');
+    if ( $location.search().api ) {
+      $scope.api = $location.search().api;
     } else {
       $scope.api = $scope.defaultAPI;
     }
