@@ -147,7 +147,7 @@
               More Information
             </div>
             <ul class="mdl-mega-footer--link-list">
-              <li><a href="https://github.com/linkeddata/SoLiD">Powered by SoLiD {{me}} ({{balance}})</a></li>
+              <li><a href="https://github.com/linkeddata/SoLiD">Powered by SoLiD <br>{{me}} <span ng-show="balance">({{balance}})</span></a></li>
             </ul>
           </div>
         </footer>
@@ -155,7 +155,7 @@
     </div>
 
 
-    <!-- About -->
+    <!-- Pay -->
     <lx-dialog class="dialog dialog--l" auto-close="true" id="pay">
       <div class="dialog__header">
         <div class="toolbar bgc-blue-A700 pl+">
@@ -178,6 +178,32 @@
       <div class="dialog__actions">
           <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close>Cancel</button>
           <button ng-click="agree()" class="btn btn--m btn--black btn--flat" lx-ripple>Agree</button>
+      </div>
+    </lx-dialog>
+
+    <!-- Login -->
+    <lx-dialog class="dialog dialog--l" auto-close="true" id="login">
+      <div class="dialog__header">
+        <div class="toolbar bgc-blue-A700 pl+">
+          <span class="toolbar__label tc-white fs-title">
+            Login
+          </span>
+          <div class="toolbar__right">
+            <button class="btn btn--l btn--white btn--icon" lx-ripple lx-dialog-close>
+              <span aria-hidden="true" class="mdi mdi-close"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="dialog__content p+">
+        <p>The next article is paid content.  You must be logged in to view.</p>
+
+        <p>Would you like to pay <strong>login</strong> or <strong><a href="https://linkeddata.github.io/signup/?tab=signup">Register</a></strong>?</p>
+        <br>
+      </div>
+      <div class="dialog__actions">
+          <button class="btn btn--m btn--black btn--flat" lx-ripple lx-dialog-close>Cancel</button>
+          <button ng-click="TLSlogin()" class="btn btn--m btn--black btn--flat" lx-ripple>Login</button>
       </div>
     </lx-dialog>
 

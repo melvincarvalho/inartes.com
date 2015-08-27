@@ -158,6 +158,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   */
   $scope.afterLogin = function() {
     $scope.fetchBalance();
+    LxDialogService.close('login');
   };
 
 
@@ -497,6 +498,10 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
           $scope.paymentURI = paymentDomain + '.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
           f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
             // process 402 or 403
+            if (!$scope.me) {
+              $scope.openDialog('login');
+              return;
+            }
             $scope.openDialog('pay');
             return;
           });
