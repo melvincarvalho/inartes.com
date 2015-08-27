@@ -84,6 +84,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     } else {
       $scope.api = $scope.defaultAPI;
     }
+    $scope.shortcuts();
 
     $scope.amount = 25; // default cost
 
@@ -659,18 +660,6 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   */
   $scope.openDialog = function(elem, reset) {
     LxDialogService.open(elem);
-    $(document).keyup(function(e) {
-      if (e.keyCode===27) {
-        LxDialogService.close(elem);
-      }
-    });
-    if (elem === 'pay') {
-      $(document).keyup(function(e) {
-        if (e.keyCode===13) {
-          $scope.agree(elem);
-        }
-      });
-    }
   };
 
   /**
@@ -682,11 +671,37 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   };
 
 
+  /**
+  * Adds shortcuts
+  */
+  $scope.shortcuts = function(elem) {
+    $('#pay').keyup(function(e) {
+      if (e.keyCode===27) {
+        LxDialogService.close('pay');
+      }
+    });
+  };
+
+
 
   /**
   * Checks for keypresses of arrow keys
   */
   $scope.keydown = function(event) {
+    if (event.which === 27) {
+      if ($('#login').is(":visible")) {
+        LxDialogService.close('login');
+      }
+      if ($('#pay').is(":visible")) {
+        LxDialogService.close('pay');
+      }
+    }
+    if (event.which === 13) {
+      if ($('#pay').is(":visible")) {
+        LxDialogService.close('pay');
+        $scope.agree();
+      }
+    }
     if (event.which === 37) {
       $scope.prev();
     }
