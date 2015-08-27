@@ -78,7 +78,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.line = 1;
     $scope.likeIcon = 'favorite_border';
     $scope.balance = 0;
-    $scope.defaultAPI = 'http://klaranet/wallet/inartes.com/api/v1/';
+    $scope.defaultAPI = 'http://gitpay.org/wallet/github.com/melvincarvalho/inartes.com/api/v1/';
     if ( $location.search().api ) {
       $scope.api = $location.search().api;
     } else {
