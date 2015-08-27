@@ -77,7 +77,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     $scope.chapter = 1;
     $scope.line = 1;
     $scope.likeIcon = 'favorite_border';
-    $scope.balance = 7000;
+    $scope.balance = 0;
     $scope.defaultAPI = 'http://gitpay.org/wallet/github.com/melvincarvalho/inartes.com/api/v1/';
     $scope.api = $scope.defaultAPI;
 
