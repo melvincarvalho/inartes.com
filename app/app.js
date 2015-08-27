@@ -501,16 +501,18 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
             return;
           });
 
+        } else {
+          $scope.verse = 1;
+          $scope.line = 1;
+          $scope.chapter++;
+          var fragments = $scope.getFragments($scope.nextURI);
+          $scope.contentURI = $scope.nextURI + '#' + fragments[0];
+          $location.search('contentURI', $scope.contentURI);
+
+          $scope.render();
+          
         }
 
-        $scope.verse = 1;
-        $scope.line = 1;
-        $scope.chapter++;
-        var fragments = $scope.getFragments($scope.nextURI);
-        $scope.contentURI = $scope.nextURI + '#' + fragments[0];
-        $location.search('contentURI', $scope.contentURI);
-
-        $scope.render();
       });
 
 
@@ -580,7 +582,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
     if (inbox) inbox = inbox.value + hash + '/';
 
 
-    alert('paying ' + amount + ' bits to ' + destination + ' \ninbox : ' + inbox);
+    console.log('paying ' + amount + ' bits to ' + destination + ' \ninbox : ' + inbox);
 
     var wc = '<#this>  a <https://w3id.org/cc#Credit> ;\n';
     wc += '  <https://w3id.org/cc#source> \n    <' + source + '> ;\n';
