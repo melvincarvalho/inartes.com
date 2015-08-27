@@ -617,7 +617,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       g.remove(error[i]);
     }
 
-    var DELAY = 3000;
+    var DELAY = 2000;
     setTimeout($scope.next, DELAY);
   }
 
@@ -658,20 +658,27 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
   * Opens a dialog
   */
   $scope.openDialog = function(elem, reset) {
-      LxDialogService.open(elem);
+    LxDialogService.open(elem);
+    $(document).keyup(function(e) {
+      if (e.keyCode===27) {
+        LxDialogService.close(elem);
+      }
+    });
+    if (elem === 'pay') {
       $(document).keyup(function(e) {
-        if (e.keyCode===27) {
-          LxDialogService.close(elem);
+        if (e.keyCode===13) {
+          $scope.agree(elem);
         }
       });
+    }
   };
 
   /**
   * Agrees to a payment
   */
-  $scope.agree = function(elem, reset) {
-      LxDialogService.close('pay');
-      pay();
+  $scope.agree = function(elem) {
+    LxDialogService.close('pay');
+    pay();
   };
 
 
