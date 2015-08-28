@@ -404,14 +404,20 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
 
     var artes = g.any($rdf.sym(uri), BIBO('content'));
     if (artes && artes.value) {
-      if (artes.value.indexOf('http:') === 0) {
+      if (artes.value.indexOf('http') === 0) {
         if (artes.value.indexOf('.mp3') !== -1) {
           $timeout(function () {
               $("audio source").attr("src", artes.value);
               $("audio").attr("src", artes.value);
           }, 500);
         }
+        if (artes.value.indexOf('youtube') !== -1) {
+          $timeout(function () {
+              $("#iframe").attr("src", artes.value);
+          }, 500);
+        }
       }
+
       return artes.value;
     }
 

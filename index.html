@@ -93,7 +93,8 @@
                 <div style="white-space: pre-line" class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
                   <h4 ng-show="artes.indexOf('.jpg') !== -1 || artes.indexOf('.gif') !== -1"><img src="{{artes}}"/></h4>
                   <h4 ng-show="artes.indexOf('.mp3') !== -1 "><audio controls autoplay><source src=""></source></audio></h4>
-                  <h4 ng-hide="artes.indexOf('.jpg') !== -1 || artes.indexOf('.gif') !== -1 || artes.indexOf('.mp3') !== -1 ">{{artes}}</h4>
+                  <h4 ng-show="artes.indexOf('youtube') !== -1 "><style>.embed-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }</style><div class='embed-container'><iframe id='iframe' frameborder='0' allowfullscreen></iframe></div></h4>
+                  <h4 ng-hide="artes.indexOf('.jpg') !== -1 || artes.indexOf('.gif') !== -1 || artes.indexOf('.mp3') !== -1 || artes.indexOf('youtube') !== -1 ">{{artes}}</h4>
                 </div>
               </div>
               <div class="mdl-card__actions">
