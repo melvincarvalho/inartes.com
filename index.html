@@ -91,8 +91,8 @@
                   <div class="section__circle-container__circle mdl-color--primary"></div>
                 </div>
                 <div style="white-space: pre-line" class="section__text mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
-                  <h4 ng-if="artes.indexOf('.jpg') !== -1"><img src="{{artes}}"/></h4>
-                  <h4 ng-if="artes.indexOf('.jpg') === -1">{{artes}}</h4>
+                  <h4 ng-show="artes.indexOf('.jpg') !== -1 || artes.indexOf('.gif') !== -1"><img src="{{artes}}"/></h4>
+                  <h4 ng-hide="artes.indexOf('.jpg') !== -1 || artes.indexOf('.gif') !== -1">{{artes}}</h4>
                 </div>
               </div>
               <div class="mdl-card__actions">
