@@ -4,7 +4,7 @@
 var f,g;
 var template;
 
-var BIBO  = $rdf.Namespace("http://purl.org/ontology/bibo/#");
+var BIBO  = $rdf.Namespace("http://purl.org/ontology/bibo/");
 var CHAT  = $rdf.Namespace("https://ns.rww.io/chat#");
 var COMM  = $rdf.Namespace("https://w3id.org/commerce/");
 var CURR  = $rdf.Namespace("https://w3id.org/cc#");
@@ -402,7 +402,7 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
       return;
     }
 
-    var artes = g.any($rdf.sym(uri), BIBO('content'));
+    var artes = g.any($rdf.sym(uri), BIBO('#content')) || g.any($rdf.sym(uri), BIBO('content'));
     if (artes && artes.value) {
       if (artes.value.indexOf('http') === 0) {
         if (artes.value.indexOf('.mp3') !== -1) {
