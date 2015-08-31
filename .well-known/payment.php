@@ -2,13 +2,18 @@
 
 $uri = $_REQUEST['uri'];
 $amount = 1;
-$owner = 'https://inartes.databox.me/profile/card#me';
+
+if (isset($_REQUEST['maker'])) {
+  $maker = $_REQUEST['maker'];
+} else {
+  $maker = 'https://inartes.databox.me/profile/card#me';  
+}
 $wallet = 'inartes.com';
 
 
-$turtle = "<$uri> <http://xmlns.com/foaf/0.1/maker> <$owner> . \n";
+$turtle = "<$uri> <http://xmlns.com/foaf/0.1/maker> <$maker> . \n";
 $turtle .= "<$uri> <https://w3id.org/commerce/rate> 25 . \n";
-$turtle .= "<$owner> <https://w3id.org/cc#wallet> <https://localhost/etc/wallet/inartes.com/wallet#wallet> . \n";
+$turtle .= "<$maker> <https://w3id.org/cc#wallet> <https://localhost/etc/wallet/inartes.com/wallet#wallet> . \n";
 $turtle .= "<https://localhost/etc/wallet/inartes.com/wallet#wallet> <https://w3id.org/cc#inbox> <https://localhost/etc/wallet/inartes.com/inbox/> . \n";
 
 
