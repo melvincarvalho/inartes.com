@@ -517,6 +517,8 @@ App.controller('Main', function($scope, $http, $location, $timeout, $sce, LxNoti
           // TODO this should come from header
           var paymentDomain = window.location.toString().split('?')[0];
           $scope.paymentURI = paymentDomain + '.well-known/payment?uri=' + encodeURIComponent($scope.nextURI);
+          var m = g.any( $rdf.sym($scope.contentURI.split('#')[0]), FOAF('maker') );
+          if (m) $scope.paymentURI += '&maker=' + encodeURIComponent(m.value);
           f.nowOrWhenFetched($scope.paymentURI, undefined, function(ok, body) {
             // process 402 or 403
             if (!$scope.me) {
