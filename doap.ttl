@@ -9,6 +9,6 @@
     <http://usefulinc.com/ns/doap#shortdesc> "A inartes App for the SoLiD platform" ;
     <http://usefulinc.com/ns/doap#shortname> "inartes" ;
     <http://www.w3.org/ns/solid/app#description> "A media and art App for the SoLiD platform" ;
-    <http://www.w3.org/ns/solid/app#homepage> <https://melvincarvalho.github.io/inartes/> ;
+    <http://www.w3.org/ns/solid/app#homepage> <http://inartes.com/> ;
     <http://www.w3.org/ns/solid/app#icon> <https://raw.githubusercontent.com/melvincarvalho/inartes.com/master/images/icon.png> ;
     <http://www.w3.org/ns/solid/app#name> "inartes" .
